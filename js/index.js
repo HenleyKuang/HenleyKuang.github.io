@@ -7,7 +7,7 @@ angular.module('nbaStatsApp', [])
 				GameDate=` + appCtrls.date + `&
 				LeagueID=00&
 				DayOffset=00&
-				callback=?`;  
+				callback=?`;   
 				
 		$.getJSON (url, function (json) {
 			$scope.$apply(function () {  
