@@ -16,10 +16,8 @@
 			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
 
 			<div ng-repeat="score in appCtrls.scoreBoard.resultSets[1].rowSet">
-				<div class="row w-25">
-					<div class="col"><strong>Team:</strong> {{score[4]}} </div>
-					<div class="col"><strong>Score:</strong> {{score[21]}}</div>
-				</div>
+				Team: {{score[4]}}
+				Score: {{score[21]}}
 			</div>
 		</div>
 	</body>
