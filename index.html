@@ -14,9 +14,7 @@
 		<div ng-controller="appController as appCtrls">
 			<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (MM/DD/YYYY)">
 			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
-			
-			<i class="fa fa-circle-o-notch fa-spin" aria-hidden="true" ng-show="appCtrls.loading"></i>			
-			
+
 			<div ng-repeat="score in appCtrls.scoreBoard.resultSets[1].rowSet">
 				<div class="row w-25">
 					<div class="col"><strong>Team:</strong> {{score[4]}} </div>
