@@ -6,7 +6,7 @@
 		<script src="js/index.js"></script>
 		
 		<link rel="stylesheet" href="css/index.css">
-		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
 		<link rel="stylesheet" href="css/bootstrap.css">
 	</head>
 	
@@ -16,8 +16,10 @@
 			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
 
 			<div ng-repeat="score in appCtrls.scoreBoard.resultSets[1].rowSet">
-				Team: {{score[4]}}
-				Score: {{score[21]}}
+				<div class="row w-25">
+					<div class="col"><strong>Team:</strong> {{score[4]}} </div>
+					<div class="col"><strong>Score:</strong> {{score[21]}}</div>
+				</div>
 			</div>
 		</div>
 	</body>
