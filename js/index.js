@@ -10,7 +10,7 @@ angular.module('nbaStatsApp', [])
     appCtrls.apiEndPoints = {
       boxScoreAdvanced: 'http://stats.nba.com/stats/boxscoreadvancedv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&callback=?&GameId=',
       boxScoreSummary: 'http://stats.nba.com/stats/boxscoresummaryv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&callback=?&GameId=',
-      scoreBoard: 'https://henleykuang.github.io/NBA-ScoreBoard/00_full_schedule.json'
+      scoreBoard: 'http://raw.githubusercontent.com/HenleyKuang/nba-scoreboard/master/00_full_schedule.json'
     }
 
     //EndPoint JSON Indexes
@@ -24,11 +24,9 @@ angular.module('nbaStatsApp', [])
     //custom JSON function to reduce lines
     appCtrls.callAPI = function ( apiUrl, successCallback, failCallback ) {
       $.getJSON (apiUrl, function (json) {
-    			$scope.$apply(function () {
-				      successCallback(json);
-    			});
+    			$scope.$apply(function () { successCallback(json); });
   		  }).fail(function(jqxhr){
-            failCallback();
+            $scope.$apply(function () { failCallback(); });
         });
     }
 
