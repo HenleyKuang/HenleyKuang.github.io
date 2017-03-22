@@ -26,7 +26,7 @@ angular.module('nbaStatsApp', [])
       $.getJSON (apiUrl, function (json) {
     			$scope.$apply(function () { successCallback(json); });
   		  }).fail(function(jqxhr){
-            $scope.$apply(function () { failCallback(); });
+          if( failCallback != null ) $scope.$apply(function () { failCallback(); });
         });
     }
 
