@@ -17,10 +17,10 @@
 
 			<div ng-repeat="score in appCtrls.scoreBoard">
 				<div class="row w-25">
-					<div class="col"><strong>GameID:</strong> {{score.game_id}} </div>
-					<div class="col"><strong>{{score.team1Name}}</strong>: {{score.team1Points}}
-																		vs
-													 <strong>{{score.team2Name}}</strong>: {{score.team2Points}}</div>
+					<div class="col-md-5"><strong>GameID:</strong> {{score.game_id}} </div>
+					<div class="col-md-2"><strong>{{score.team1Name}}</strong>: {{score.team1Points}}</div>
+					<div class="col-xs-1">vs</div>
+					<div class="col-md-2"><strong>{{score.team2Name}}</strong>: {{score.team2Points}}</div>
 				</div>
 			</div>
 		</div>
