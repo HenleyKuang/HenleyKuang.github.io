@@ -11,13 +11,13 @@
 	</head>
 
 	<body>
-		<div ng-controller="appController as appCtrls">
-			<div class="m-1">
+		<div class="ml-4" ng-controller="appController as appCtrls">
+			<div class="row justify-content-md-center">
 				<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (YYYYMMDD)">
-				<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
+				<button type="button" class="btn btn-primary ml-2" ng-click="appCtrls.getScores()">Get Scores</button>
 			</div>
 
-			<div class="row">
+			<div class="row justify-content-md-center">
 				<div class="col" ng-repeat="col in appCtrls.scoreBoard">
 					<div  ng-repeat="score in col">
 						<div class="card mb-4">
