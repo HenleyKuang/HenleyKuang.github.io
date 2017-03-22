@@ -3,6 +3,7 @@ angular.module('nbaStatsApp', [])
     var appCtrls = this;
 
     //App Variables
+    appCtrls.scoreColumns = 3;
     appCtrls.scoreBoard = {};
 
     //list of NBA API EndPoints
@@ -54,6 +55,10 @@ angular.module('nbaStatsApp', [])
             }
             mm = mm > 9 ? 10 - mm : mm+2; //convert Month to json data's array index
 
+            var currentColumn = 0;
+            for ( var i = 0; i <= appCtrls.scoreColumns; i++)
+              appCtrls.scoreBoard[i] = {};
+
             //for each game found, insert them into an array to be displayed onto page
             for ( let game of json.lscd[mm].mscd.g ) {
               var dayOfGame = parseInt(game.gcode.substring(0,9));
@@ -82,12 +87,15 @@ angular.module('nbaStatsApp', [])
                   boxSummary.status = gameInfoArray[appCtrls.apiIndex.bxSmryGameStatus];
                   if( boxSummary.status != "Final" )
                     boxSummary.status += ' ' + gameInfoArray[appCtrls.apiIndex.bxSmryGameTimeRemain];
-                  appCtrls.scoreBoard[game.gid] = boxSummary;
+
+                  appCtrls.scoreBoard[currentColumn][game.gid] = boxSummary;
+                  currentColumn = currentColumn < appCtrls.scoreColumns-1 ? currentColumn + 1 : 0;
                 };
 
                 var functionFail = function() {
                   boxSummary.status = game.stt; //Game's Start Time
-                  appCtrls.scoreBoard[game.gid] = boxSummary;
+                  appCtrls.scoreBoard[currentColumn][game.gid] = boxSummary;
+                  currentColumn = currentColumn < appCtrls.scoreColumns-1 ? currentColumn + 1 : 0;
                 };
 
                 appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail);
