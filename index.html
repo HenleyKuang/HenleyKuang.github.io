@@ -4,21 +4,24 @@
 		<script src="js/jquery-3.1.1.min.js"></script>
 		<script src="js/angular.min.js"></script>
 		<script src="js/index.js"></script>
-		
+
 		<link rel="stylesheet" href="css/index.css">
 		<!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
 		<link rel="stylesheet" href="css/bootstrap.css">
 	</head>
-	
+
 	<body>
 		<div ng-controller="appController as appCtrls">
 			<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (MM/DD/YYYY)">
 			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
 
-			<div ng-repeat="score in appCtrls.scoreBoard.resultSets[1].rowSet">
+			<div ng-repeat="score in appCtrls.scoreBoard">
 				<div class="row w-25">
+					<div class="col"><strong>GameID:</string> {{score.game_id}} </div>
+					<!--
 					<div class="col"><strong>Team:</strong> {{score[4]}} </div>
 					<div class="col"><strong>Score:</strong> {{score[21]}}</div>
+					-->
 				</div>
 			</div>
 		</div>
