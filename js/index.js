@@ -14,6 +14,9 @@ angular.module('nbaStatsApp', [])
 
     //EndPoint JSON Indexes
     appCtrls.apiIndex = {
+       bxSmryGameSummary: 0, //resulSets[bxSmryGameSummary].name = "GameSummry"
+       bxSmryGameStatus: 4, //resulSets[bxSmryGameSummary].rowSet[0][bxSmryGameStatus] = "Final or Q1-4"
+       bxSmryGameTimeRemain: 10, //resulSets[bxSmryGameSummary].rowSet[0][bxSmryGameTimeRemain] = "XX:XX"
        bxSmryLineScore: 5 //resulSets[bxSmryLineScore].name = "LineScore"
      }
 
@@ -35,6 +38,7 @@ angular.module('nbaStatsApp', [])
 
         appCtrls.callAPI( appCtrls.apiEndPoints.scoreBoard,
           function (json) {
+            console.log(json);
             //Find game ids for today from the JSON data
             var dateOfScores = new Date(), year, dd, mm;
             if( appCtrls.date ) {
@@ -56,33 +60,43 @@ angular.module('nbaStatsApp', [])
               //if the days of the game is today, then insert new object into our scoreboard
               if( dayOfGame == dateOfScores ) {
                 //call boxScoreSummary API to get the scores
-                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid,
-                  function (scores) {
-                    var teamsArray = scores.resultSets[appCtrls.apiIndex.bxSmryLineScore].rowSet;
-                    var boxSummary = {
-                      game_id: game.gid,
-                      team1Name : game.h.ta,
-                      team2Name : game.v.ta,
-                      team1Points : teamsArray[0][teamsArray[0].length-1],
-                      team2Points : teamsArray[1][teamsArray[1].length-1]
-                    };
-                    appCtrls.scoreBoard[game.gid] = boxSummary;
+                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail);
+
+                let boxSummary = {
+                  game_id: game.gid,
+                  status: '',
+                  team1: {
+                    name:game.h.ta,
+                    points: 0
                   },
-                  function() {
-                    var boxSummary = {
-                      game_id: game.gid,
-                      team1Name : game.h.ta,
-                      team2Name : game.v.ta,
-                      team1Points : 0,
-                      team2Points : 0
-                    };
-                    appCtrls.scoreBoard[game.gid] = boxSummary;
+                  team2: {
+                    name : game.v.ta,
+                    points: 0
                   }
-                );
+                };
+
+                var functionSuccess = function (scores) {
+                  console.log(scores);
+                  var teamsArray = scores.resultSets[appCtrls.apiIndex.bxSmryLineScore].rowSet;
+                  boxSummary.team1.points = teamsArray[0][teamsArray[0].length-1];
+                  boxSummary.team2.points = teamsArray[1][teamsArray[1].length-1];
+                  var gameInfoArray = scores.resultSets[appCtrls.apiIndex.bxSmryGameSummary].rowSet[0];
+                  boxSummary.status = gameInfoArray[appCtrls.apiIndex.bxSmryGameStatus];
+                  if( boxSummary.status != "Final" )
+                    boxSummary.status += ' ' + gameInfoArray[appCtrls.apiIndex.bxSmryGameTimeRemain];
+                  appCtrls.scoreBoard[game.gid] = boxSummary;
+                };
+
+                var functionFail = function() {
+                  boxSummary.status = game.stt; //Game's Start Time
+                  appCtrls.scoreBoard[game.gid] = boxSummary;
+                };
               }
               else if( dayOfGame > dateOfScores )
                 break;
             }
           });
-    };
+        };
+      //getScores on load
+      appCtrls.getScores();
   });

@@ -12,15 +12,20 @@
 
 	<body>
 		<div ng-controller="appController as appCtrls">
-			<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (YYYYMMDD)">
-			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
+			<div class="m-1">
+				<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (YYYYMMDD)">
+				<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
+			</div>
 
 			<div ng-repeat="score in appCtrls.scoreBoard">
-				<div class="row w-25">
-					<div class="col-md-5"><strong>GameID:</strong> {{score.game_id}} </div>
-					<div class="col-md-2"><strong>{{score.team1Name}}</strong>: {{score.team1Points}}</div>
-					<div class="col-xs-1">vs</div>
-					<div class="col-md-2"><strong>{{score.team2Name}}</strong>: {{score.team2Points}}</div>
+				<div class="card w-50 m-1">
+				  <div class="card-block">
+				    <h4 class="card-title">{{score.team1.name}} vs {{score.team2.name}}</h4>
+				    <h6 class="card-subtitle mb-2 text-muted">GameID:</strong> {{score.game_id}}</h6>
+				    <p class="card-text">{{score.team1.points}} - {{score.team2.points}} - {{score.status}}</p>
+				    <a href="#" class="card-link">Box Score</a>
+				    <a href="#" class="card-link">Live Stream</a>
+				  </div>
 				</div>
 			</div>
 		</div>
