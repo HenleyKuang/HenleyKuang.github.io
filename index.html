@@ -12,16 +12,15 @@
 
 	<body>
 		<div ng-controller="appController as appCtrls">
-			<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (MM/DD/YYYY)">
+			<input type="text" ng-model="appCtrls.date" size="30" placeholder="Enter a date (YYYYMMDD)">
 			<button type="button" class="btn btn-primary" ng-click="appCtrls.getScores()">Get Scores</button>
 
 			<div ng-repeat="score in appCtrls.scoreBoard">
 				<div class="row w-25">
-					<div class="col"><strong>GameID:</string> {{score.game_id}} </div>
-					<!--
-					<div class="col"><strong>Team:</strong> {{score[4]}} </div>
-					<div class="col"><strong>Score:</strong> {{score[21]}}</div>
-					-->
+					<div class="col"><strong>GameID:</strong> {{score.game_id}} </div>
+					<div class="col"><strong>{{score.team1Name}}</strong>: {{score.team1Points}}
+																		vs
+													 <strong>{{score.team2Name}}</strong>: {{score.team2Points}}</div>
 				</div>
 			</div>
 		</div>

@@ -7,9 +7,9 @@ angular.module('nbaStatsApp', [])
 
     //list of NBA API EndPoints
     appCtrls.apiEndPoints = {
-      boxScoreAdvanced: 'http://stats.nba.com/stats/boxscoreadvancedv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&GameId=',
-      boxScoreSummary: 'http://stats.nba.com/stats/boxscoresummaryv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&GameId=',
-      scoreBoard: 'http://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2016/league/00_full_schedule.json'
+      boxScoreAdvanced: 'http://stats.nba.com/stats/boxscoreadvancedv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&callback=?&GameId=',
+      boxScoreSummary: 'http://stats.nba.com/stats/boxscoresummaryv2/?StartPeriod=0&EndPeriod=0&StartRange=0&EndRange=0&RangeType=0&callback=?&GameId=',
+      scoreBoard: 'https://henleykuang.github.io/NBA-ScoreBoard/00_full_schedule.json'
     }
 
     //EndPoint JSON Indexes
@@ -18,62 +18,69 @@ angular.module('nbaStatsApp', [])
      }
 
     //custom JSON function to reduce lines
-    appCtrls.callAPI = function ( apiUrl, successCallback ) {
-      // $.getJSON (url, function (json) {
-    	// 		$scope.$apply(function () {
-    	// 			successCallback(json);
-    	// 		});
-  		//   });
-
-      $.ajax({
-          url: apiUrl,
-          type: "GET", /* or type:"GET" or type:"PUT" */
-          dataType: 'JSON',
-          crossDomain: true,
-          success: function (result) {
-              successCallback(result);
-          },
-          error: function () {
-              console.log("error");
-          },
-          headers: {
-                    'Access-Control-Allow-Origin': ''
-                },
-      });
+    appCtrls.callAPI = function ( apiUrl, successCallback, failCallback ) {
+      $.getJSON (apiUrl, function (json) {
+    			$scope.$apply(function () {
+				      successCallback(json);
+    			});
+  		  }).fail(function(jqxhr){
+            failCallback();
+        });
     }
 
     appCtrls.getScores = function( ) {
       	var url = appCtrls.apiEndPoints.scoreBoard;
+        //clear Scoreboard
+        for (var member in appCtrls.scoreBoard) delete appCtrls.scoreBoard[member];
 
         appCtrls.callAPI( appCtrls.apiEndPoints.scoreBoard,
           function (json) {
             //Find game ids for today from the JSON data
-            console.log(json);
-            var today = new Date();
-            var year = today.getFullYear();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1; //Jan is 1
+            var dateOfScores = new Date(), year, dd, mm;
+            if( appCtrls.date ) {
+              dateOfScores = appCtrls.date;
+              mm = parseInt(dateOfScores.substring(4,6));
+            }
+            else {
+              year = dateOfScores.getFullYear();
+              dd = dateOfScores.getDate();
+              mm = dateOfScores.getMonth()+1; //Jan is 1
+
+              dateOfScores = year*10000+mm*100+dd;
+            }
             mm = mm > 9 ? 10 - mm : mm+2; //convert Month to json data's array index
 
             //for each game found, insert them into an array to be displayed onto page
             for ( let game of json.lscd[mm].mscd.g ) {
-              var dayOfGame = parseInt(game.gcode.substring(0,9))%100;
+              var dayOfGame = parseInt(game.gcode.substring(0,9));
               //if the days of the game is today, then insert new object into our scoreboard
-              if( dayOfGame == dd ) {
+              if( dayOfGame == dateOfScores ) {
                 //call boxScoreSummary API to get the scores
-                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, function (scores) {
-                  var teamsArray = scores.resultSets[appCtrls.apiIndex[bxSmryLineScore]].rowSet;
-                  var boxSummary = {
-                    game_id: game.gid,
-                    team1Name : game.h.ta,
-                    team2Name : game.v.ta,
-                    team1Points : teamsArray[0][teamsArray[0].length-1],
-                    team2Points : teamsArray[1][teamsArray[1].length-1]
-                  };
-                  appCtrls.scoreBoard[game.gid] = boxSummary;
-                });
+                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid,
+                  function (scores) {
+                    var teamsArray = scores.resultSets[appCtrls.apiIndex.bxSmryLineScore].rowSet;
+                    var boxSummary = {
+                      game_id: game.gid,
+                      team1Name : game.h.ta,
+                      team2Name : game.v.ta,
+                      team1Points : teamsArray[0][teamsArray[0].length-1],
+                      team2Points : teamsArray[1][teamsArray[1].length-1]
+                    };
+                    appCtrls.scoreBoard[game.gid] = boxSummary;
+                  },
+                  function() {
+                    var boxSummary = {
+                      game_id: game.gid,
+                      team1Name : game.h.ta,
+                      team2Name : game.v.ta,
+                      team1Points : 0,
+                      team2Points : 0
+                    };
+                    appCtrls.scoreBoard[game.gid] = boxSummary;
+                  }
+                );
               }
-              else if( dayOfGame > dd )
+              else if( dayOfGame > dateOfScores )
                 break;
             }
           });
