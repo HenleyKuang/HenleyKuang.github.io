@@ -37,7 +37,7 @@ angular.module('nbaStatsApp', [])
 
         appCtrls.callAPI( appCtrls.apiEndPoints.scoreBoard,
           function (json) {
-            console.log(json);
+            //console.log(json);
             //Find game ids for today from the JSON data
             var dateOfScores = new Date(), year, dd, mm;
             if( appCtrls.date ) {
@@ -77,7 +77,7 @@ angular.module('nbaStatsApp', [])
                 };
 
                 var functionSuccess = function (scores) {
-                  console.log(scores);
+                  //console.log(scores);
                   var teamsArray = scores.resultSets[appCtrls.apiIndex.bxSmryLineScore].rowSet;
                   boxSummary.team1.points = teamsArray[0][teamsArray[0].length-1];
                   boxSummary.team2.points = teamsArray[1][teamsArray[1].length-1];
