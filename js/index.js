@@ -60,8 +60,6 @@ angular.module('nbaStatsApp', [])
               //if the days of the game is today, then insert new object into our scoreboard
               if( dayOfGame == dateOfScores ) {
                 //call boxScoreSummary API to get the scores
-                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail);
-
                 let boxSummary = {
                   game_id: game.gid,
                   status: '',
@@ -91,6 +89,8 @@ angular.module('nbaStatsApp', [])
                   boxSummary.status = game.stt; //Game's Start Time
                   appCtrls.scoreBoard[game.gid] = boxSummary;
                 };
+
+                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail);
               }
               else if( dayOfGame > dateOfScores )
                 break;
