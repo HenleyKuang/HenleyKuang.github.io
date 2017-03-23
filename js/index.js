@@ -28,14 +28,14 @@ angular.module('nbaStatsApp', [])
   		  }).fail(function(jqxhr){
           if( failCallback != null ) $scope.$apply(function () { failCallback(); });
         }).always(function() {
-          if( alwaysCallback != null ) alwaysCallback();
+          if( alwaysCallback != null ) $scope.$apply(function () { alwaysCallback() });
         });
     }
 
     appCtrls.getScores = function( ) {
       	var url = appCtrls.apiEndPoints.scoreBoard;
         //clear Scoreboard
-        for (var member in appCtrls.scoreBoard) delete appCtrls.scoreBoard[member];
+        appCtrls.scoreBoard = [];
 
         appCtrls.callAPI( appCtrls.apiEndPoints.scoreBoard,
           function (json) {
