@@ -3,8 +3,8 @@ angular.module('nbaStatsApp', [])
     var appCtrls = this;
 
     //App Variables
-    appCtrls.scoreColumns = 3;
-    appCtrls.scoreBoard = {};
+    appCtrls.scoreColumns = 1;
+    appCtrls.scoreBoard = [];
 
     //list of NBA API EndPoints
     appCtrls.apiEndPoints = {
@@ -22,11 +22,13 @@ angular.module('nbaStatsApp', [])
      }
 
     //custom JSON function to reduce lines
-    appCtrls.callAPI = function ( apiUrl, successCallback, failCallback ) {
-      $.getJSON (apiUrl, function (json) {
+    appCtrls.callAPI = function ( apiUrl, successCallback, failCallback, alwaysCallback ) {
+      $.getJSON (apiUrl).then( function (json) {
     			$scope.$apply(function () { successCallback(json); });
   		  }).fail(function(jqxhr){
           if( failCallback != null ) $scope.$apply(function () { failCallback(); });
+        }).always(function() {
+          if( alwaysCallback != null ) alwaysCallback();
         });
     }
 
@@ -53,10 +55,6 @@ angular.module('nbaStatsApp', [])
             }
             mm = mm > 9 ? 10 - mm : mm+2; //convert Month to json data's array index
 
-            var currentColumn = 0;
-            for ( var i = 0; i <= appCtrls.scoreColumns; i++)
-              appCtrls.scoreBoard[i] = {};
-
             //for each game found, insert them into an array to be displayed onto page
             for ( let game of json.lscd[mm].mscd.g ) {
               var dayOfGame = parseInt(game.gcode.substring(0,9));
@@ -67,11 +65,13 @@ angular.module('nbaStatsApp', [])
                   game_id: game.gid,
                   status: '',
                   team1: {
-                    name:game.h.ta,
+                    name: game.h.ta,
+                    logo_src: "http://stats.nba.com/media/img/teams/logos/season/2016-17/" + game.h.ta + "_logo.svg",
                     points: 0
                   },
                   team2: {
                     name : game.v.ta,
+                    logo_src: "http://stats.nba.com/media/img/teams/logos/season/2016-17/" + game.v.ta + "_logo.svg",
                     points: 0
                   }
                 };
@@ -85,21 +85,23 @@ angular.module('nbaStatsApp', [])
                   boxSummary.status = gameInfoArray[appCtrls.apiIndex.bxSmryGameStatus];
                   if( boxSummary.status != "Final" )
                     boxSummary.status += ' ' + gameInfoArray[appCtrls.apiIndex.bxSmryGameTimeRemain];
-
-                  appCtrls.scoreBoard[currentColumn][game.gid] = boxSummary;
-                  currentColumn = currentColumn < appCtrls.scoreColumns-1 ? currentColumn + 1 : 0;
                 };
 
                 var functionFail = function() {
                   boxSummary.status = game.stt; //Game's Start Time
-                  appCtrls.scoreBoard[currentColumn][game.gid] = boxSummary;
-                  currentColumn = currentColumn < appCtrls.scoreColumns-1 ? currentColumn + 1 : 0;
                 };
 
-                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail);
+                var functionAlways = function () {
+                  appCtrls.scoreBoard.push(boxSummary);
+                  appCtrls.scoreBoard.sort( function (a,b) { return a.game_id - b.game_id; })
+                }
+
+                appCtrls.callAPI( appCtrls.apiEndPoints.boxScoreSummary + game.gid, functionSuccess, functionFail, functionAlways);
               }
-              else if( dayOfGame > dateOfScores )
+              else if( dayOfGame > dateOfScores ) {
+                console.log( appCtrls.scoreBoard );
                 break;
+              }
             }
           });
         };

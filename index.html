@@ -18,15 +18,25 @@
 			</div>
 			<div class="container">
 				<div class="row justify-content-md-center">
-					<div class="col-4" ng-repeat="col in appCtrls.scoreBoard">
-						<div  ng-repeat="score in col">
+					<div class="col">
+						<div ng-repeat="score in appCtrls.scoreBoard">
 							<div class="card mb-4">
 							  <div class="card-block">
-							    <h4 class="card-title">{{score.team1.name}} vs {{score.team2.name}}</h4>
-							    <h6 class="card-subtitle mb-2 text-muted">GameID:</strong> {{score.game_id}}</h6>
-							    <p class="card-text">{{score.team1.points}} - {{score.team2.points}} - {{score.status}}</p>
-							    <a ng-href="http://stats.nba.com/game/#!/{{score.game_id}}" class="card-link">Box Score</a>
-							    <a href="#" class="card-link">Live Stream</a>
+									<div class= "row">
+											<div class="col-2">
+												<img ng-src={{score.team1.logo_src}} height="100" width="100">
+												{{score.team1.name}}
+											</div>
+											<div class="col">
+										    <h6 class="card-subtitle mb-2 text-muted">GameID:</strong> {{score.game_id}}</h6>
+										    <p class="card-text">{{score.team1.points}} - {{score.team2.points}} - {{score.status}}</p>
+										    <a target="_blank" ng-href="http://stats.nba.com/game/#!/{{score.game_id}}" class="card-link">Box Score</a>
+										    <a href="#" class="card-link">Live Stream</a>
+											</div>
+											<div class="col-2">
+												<img ng-src={{score.team2.logo_src}} height="100" width="100">
+												{{score.team2.name}}
+											</div>
 							  </div>
 							</div>
 						</div>
