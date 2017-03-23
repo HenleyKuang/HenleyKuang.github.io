@@ -23,19 +23,21 @@
 							<div class="card mb-4">
 							  <div class="card-block">
 									<div class= "row">
-											<div class="col-2">
+											<div class="col-2 text-center">
+												<h3 class="card-title">{{score.team1.name}}</h3>
 												<img ng-src={{score.team1.logo_src}} height="100" width="100">
-												{{score.team1.name}}
 											</div>
+											<h1 class="col mt-5">{{score.team1.points}}</h1>
 											<div class="col text-center">
 										    <h6 class="card-subtitle mb-2 text-muted">GameID:</strong> {{score.game_id}}</h6>
-										    <p class="card-text">{{score.team1.points}} - {{score.team2.points}} - {{score.status}}</p>
+										    <p class="card-text">{{score.status}}</p>
 										    <a target="_blank" ng-href="http://stats.nba.com/game/#!/{{score.game_id}}" class="card-link">Box Score</a>
 										    <a href="#" class="card-link">Live Stream</a>
 											</div>
-											<div class="col-2">
+											<h1 class="col mt-5 text-right">{{score.team2.points}}</h1>
+											<div class="col-2 text-center"">
+												<h3 class="card-title text-center">{{score.team2.name}}</h3>
 												<img ng-src={{score.team2.logo_src}} height="100" width="100">
-												{{score.team2.name}}
 											</div>
 							  </div>
 							</div>
